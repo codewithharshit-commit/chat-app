@@ -6,6 +6,16 @@ export const signup = async (req, res) => {
   const { email, fullName, password } = req.body;
 
   try {
+    if (!email || !fullName || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters" });
+    }
+
     const user = await User.findOne({ email });
 
     if (user) {
@@ -34,13 +44,72 @@ export const signup = async (req, res) => {
         secure: process.env.NODE_ENV === "production",
       });
 
-      newUser.save();
+      await newUser.save();
 
-      res.status(201).json({ message: "User created successfully" });
+      res.status(201).json({
+        message: "User created successfully",
+        _id: newUser._id,
+        email: newUser.email,
+        fullName: newUser.fullName,
+      });
     } else {
       res.status(400).json({ message: "User not created" });
     }
   } catch (error) {
+    console.log("Error in signup controller:", error);
     res.status(500).json({ message: "Server error" });
   }
+};
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
+    res.cookie("token", token, {
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.status(200).json({
+      message: "Login successful",
+      _id: user._id,
+      email: user.email,
+      fullName: user.fullName,
+    });
+  } catch (error) {
+    console.log("Error in login controller:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const logout = (req, res) => {
+  res.clearCookie("token", {
+    sameSite: "strict",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  res.status(200).json({ message: "Logout successful" });
 };
