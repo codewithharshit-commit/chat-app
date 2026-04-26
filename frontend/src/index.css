@@ -1,2 +1,67 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Fresca&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 @plugin "daisyui";
+
+.input {
+  @apply w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-700 focus:border-yellow-500 outline-none transition;
+}
+
+.btn-primary {
+  @apply bg-yellow-500 text-black py-3 rounded-xl font-semibold hover:opacity-90 transition shadow-lg shadow-yellow-500/20;
+}
+
+.social {
+  @apply w-12 h-12 flex items-center justify-center bg-zinc-800 rounded-xl hover:bg-zinc-700 transition;
+}
+
+body {
+  font-family: "Poppins";
+}
+
+.input-modern {
+  width: 100%;
+  padding: 14px 18px; /* makes it big */
+  border-radius: 14px; /* smooth corners */
+
+  background: rgba(38, 38, 38, 0.913);
+  backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: white;
+  font-size: 15px;
+
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* Placeholder */
+.input-modern::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Focus effect (IMPORTANT for premium feel) */
+.input-modern:focus {
+  border: 1px solid rgba(255, 200, 0, 0.8);
+  box-shadow: 0 0 15px rgba(255, 200, 0, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.with-icon {
+  padding-left: 48px; /* space for icon */
+}

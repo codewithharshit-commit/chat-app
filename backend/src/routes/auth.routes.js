@@ -20,7 +20,7 @@ authRoutes.post("/logout", logout);
 
 authRoutes.put("/updateProfile", protectRoute, updateProfile);
 
-authRoutes.get("/me", protectRoute, (req, res) => {
+authRoutes.get("/check", protectRoute, (req, res) => {
   res.status(200).json(req.user);
 });
 export default authRoutes;
