@@ -5,9 +5,10 @@ import AuthPage from "./pages/AuthPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import { useAuthStore } from "./store/useAuthStore";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth, logout } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
@@ -24,6 +25,8 @@ const App = () => {
   }
   return (
     <>
+      {/* <button onClick={logout}>logout</button> */}
+
       <Routes>
         <Route
           path="/"
@@ -39,6 +42,8 @@ const App = () => {
         />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>
+
+      <Toaster />
     </>
   );
 };

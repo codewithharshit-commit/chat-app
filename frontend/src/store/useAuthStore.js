@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 
+import toast from "react-hot-toast";
+
 export const useAuthStore = create((set) => ({
   /* These are the initial state values for the properties in the `useAuthStore` created using Zustand.
   Here's what each property represents: */
@@ -47,6 +49,44 @@ whether the application is currently checking the authentication status of the u
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
+    }
+  },
+  signup: async (data) => {
+    set({ isSigningIn: true });
+
+    try {
+      const res = await axiosInstance.post("/auth/signup", data);
+      toast.success("Account created successfully!");
+      set({ authUser: res.data });
+    } catch (error) {
+      console.error("Error signing up:", error);
+      toast.error(error.response?.data?.message || "Signup failed");
+    } finally {
+      set({ isSigningIn: false });
+    }
+  },
+  login: async (data) => {
+    set({ isLoggingIn: true });
+
+    try {
+      const res = await axiosInstance.post("/auth/login", data);
+      toast.success("Logged in successfully!");
+      set({ authUser: res.data });
+    } catch (error) {
+      console.error("Error logging in:", error);
+      toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      set({ isLoggingIn: false });
+    }
+  },
+  logout: async () => {
+    try {
+      await axiosInstance.post("/auth/logout");
+      toast.success("Logged out successfully!");
+      set({ authUser: null });
+    } catch (error) {
+      console.error("Error logging out:", error);
+      toast.error(error.response?.data?.message || "Logout failed");
     }
   },
 }));
